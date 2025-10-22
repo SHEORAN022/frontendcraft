@@ -4,7 +4,7 @@ import {
   Card,
   Button,
   Table,
-  Badge, 
+  Badge,
   Modal,
   Form,
 } from "react-bootstrap";
@@ -12,17 +12,35 @@ import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import axios from "axios";
 
 const profilePositions = [
-  "topLeft","topRight","bottomLeft","bottomRight","center",
-  "centerLeft","centerRight","topCenter","bottomCenter",
+  "topLeft",
+  "topRight",
+  "bottomLeft",
+  "bottomRight",
+  "center",
+  "centerLeft",
+  "centerRight",
+  "topCenter",
+  "bottomCenter",
 ];
 
 const transitionTypes = [
-  "fade","slideFromBottom","slideFromTop","slideFromLeft","slideFromRight",
-  "slideFromBottomLeft","slideFromBottomRight","slideFromTopLeft","slideFromTopRight",
-  "scale","rotation","bounce","ripple","profileReveal",
+  "fade",
+  "slideFromBottom",
+  "slideFromTop",
+  "slideFromLeft",
+  "slideFromRight",
+  "slideFromBottomLeft",
+  "slideFromBottomRight",
+  "slideFromTopLeft",
+  "slideFromTopRight",
+  "scale",
+  "rotation",
+  "bounce",
+  "ripple",
+  "profileReveal",
 ];
 
-const orientations = ["landscape","portrait"];
+const orientations = ["landscape", "portrait"];
 
 const Templates = () => {
   const [templates, setTemplates] = useState([]);
@@ -46,20 +64,20 @@ const Templates = () => {
   // Fetch templates
   const fetchTemplates = async () => {
     try {
-      const { data } = await axios.get(${BASE_URL}/templates);
+      const { data } = await axios.get(`${BASE_URL}/templates`);
       setTemplates(data.templates || []);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching templates:", err);
     }
   };
 
   // Fetch categories
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get(${BASE_URL}/categories);
+      const { data } = await axios.get(`${BASE_URL}/categories`);
       setCategories(data.categories || data);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching categories:", err);
     }
   };
 
@@ -112,7 +130,8 @@ const Templates = () => {
   };
 
   const handleSubmit = async () => {
-    if (!form.title || !form.category) return alert("Title & Category required!");
+    if (!form.title || !form.category)
+      return alert("Title & Category required!");
 
     try {
       const fd = new FormData();
@@ -126,15 +145,17 @@ const Templates = () => {
       if (form.file) fd.append("file", form.file);
 
       const url = editId
-        ? ${BASE_URL}/templates/${editId}
-        : ${BASE_URL}/templates;
+        ? `${BASE_URL}/templates/${editId}`
+        : `${BASE_URL}/templates`;
       const method = editId ? "put" : "post";
 
-      await axios[method](url, fd, { headers: { "Content-Type": "multipart/form-data" } });
+      await axios[method](url, fd, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       fetchTemplates();
       handleClose();
     } catch (err) {
-      console.error(err);
+      console.error("Error saving template:", err);
       alert(err.response?.data?.message || "Error uploading template");
     }
   };
@@ -142,10 +163,10 @@ const Templates = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this template?")) return;
     try {
-      await axios.delete(${BASE_URL}/templates/${id});
+      await axios.delete(`${BASE_URL}/templates/${id}`);
       fetchTemplates();
     } catch (err) {
-      console.error(err);
+      console.error("Error deleting template:", err);
       alert("Failed to delete template");
     }
   };
@@ -178,15 +199,38 @@ const Templates = () => {
               {templates.map((tpl) => (
                 <tr key={tpl._id}>
                   <td>{tpl.title}</td>
-                  <td><Badge bg={tpl.type==="video"?"primary":"success"}>{tpl.type}</Badge></td>
+                  <td>
+                    <Badge bg={tpl.type === "video" ? "primary" : "success"}>
+                      {tpl.type}
+                    </Badge>
+                  </td>
                   <td>{tpl.category?.name}</td>
                   <td>{tpl.orientation}</td>
                   <td>{tpl.profilePosition}</td>
                   <td>{tpl.transitionType}</td>
-                  <td><Badge bg={tpl.status==="active"?"success":"secondary"}>{tpl.status}</Badge></td>
                   <td>
-                    <Button variant="outline-primary" size="sm" className="me-2" onClick={()=>handleShow(tpl)}><FaEdit/></Button>
-                    <Button variant="outline-danger" size="sm" onClick={()=>handleDelete(tpl._id)}><FaTrash/></Button>
+                    <Badge
+                      bg={tpl.status === "active" ? "success" : "secondary"}
+                    >
+                      {tpl.status}
+                    </Badge>
+                  </td>
+                  <td>
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      className="me-2"
+                      onClick={() => handleShow(tpl)}
+                    >
+                      <FaEdit />
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => handleDelete(tpl._id)}
+                    >
+                      <FaTrash />
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -198,18 +242,28 @@ const Templates = () => {
       {/* Modal */}
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>{editId?"Edit Template":"Add Template"}</Modal.Title>
+          <Modal.Title>
+            {editId ? "Edit Template" : "Add Template"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>Title</Form.Label>
-              <Form.Control name="title" value={form.title} onChange={handleChange} />
+              <Form.Control
+                name="title"
+                value={form.title}
+                onChange={handleChange}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Type</Form.Label>
-              <Form.Select name="type" value={form.type} onChange={handleChange}>
+              <Form.Select
+                name="type"
+                value={form.type}
+                onChange={handleChange}
+              >
                 <option value="video">Video</option>
                 <option value="graphics">Graphics</option>
               </Form.Select>
@@ -217,36 +271,72 @@ const Templates = () => {
 
             <Form.Group className="mb-3">
               <Form.Label>Category</Form.Label>
-              <Form.Select name="category" value={form.category} onChange={handleChange}>
+              <Form.Select
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+              >
                 <option value="">Select Category</option>
-                {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+                {categories.map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {c.name}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Orientation</Form.Label>
-              <Form.Select name="orientation" value={form.orientation} onChange={handleChange}>
-                {orientations.map(o => <option key={o} value={o}>{o}</option>)}
+              <Form.Select
+                name="orientation"
+                value={form.orientation}
+                onChange={handleChange}
+              >
+                {orientations.map((o) => (
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Profile Position</Form.Label>
-              <Form.Select name="profilePosition" value={form.profilePosition} onChange={handleChange}>
-                {profilePositions.map(p => <option key={p} value={p}>{p}</option>)}
+              <Form.Select
+                name="profilePosition"
+                value={form.profilePosition}
+                onChange={handleChange}
+              >
+                {profilePositions.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Transition Type</Form.Label>
-              <Form.Select name="transitionType" value={form.transitionType} onChange={handleChange}>
-                {transitionTypes.map(t => <option key={t} value={t}>{t}</option>)}
+              <Form.Select
+                name="transitionType"
+                value={form.transitionType}
+                onChange={handleChange}
+              >
+                {transitionTypes.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
               </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Status</Form.Label>
-              <Form.Select name="status" value={form.status} onChange={handleChange}>
+              <Form.Select
+                name="status"
+                value={form.status}
+                onChange={handleChange}
+              >
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </Form.Select>
@@ -257,10 +347,18 @@ const Templates = () => {
               <Form.Control type="file" name="file" onChange={handleChange} />
               {filePreview && (
                 <div className="mt-2">
-                  {form.type==="video" ? (
-                    <video src={filePreview} controls style={{ maxWidth: "100%" }} />
+                  {form.type === "video" ? (
+                    <video
+                      src={filePreview}
+                      controls
+                      style={{ maxWidth: "100%" }}
+                    />
                   ) : (
-                    <img src={filePreview} alt="preview" style={{ maxWidth: "100%", maxHeight: "300px" }} />
+                    <img
+                      src={filePreview}
+                      alt="preview"
+                      style={{ maxWidth: "100%", maxHeight: "300px" }}
+                    />
                   )}
                 </div>
               )}
@@ -268,8 +366,12 @@ const Templates = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-          <Button variant="primary" onClick={handleSubmit}>Save</Button>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            Save
+          </Button>
         </Modal.Footer>
       </Modal>
     </Container>
