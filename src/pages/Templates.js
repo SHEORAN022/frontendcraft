@@ -41,7 +41,7 @@ const Templates = () => {
   });
   const [filePreview, setFilePreview] = useState(null);
 
-  const BASE_URL = "https://clonecraft.vercel.app/api";
+  const BASE_URL = "https://clonecraft.vercel.app/api/templates";
 
   // Fetch templates
   const fetchTemplates = async () => {
