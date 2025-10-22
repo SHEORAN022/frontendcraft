@@ -18,7 +18,7 @@ const profilePositions = [
   "bottomRight",
   "center",
   "centerLeft",
-  "centerRight",
+  "centerRight", 
   "topCenter",
   "bottomCenter",
 ];
