@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; 
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Card,
@@ -46,7 +46,7 @@ const Templates = () => {
   // Fetch templates
   const fetchTemplates = async () => {
     try {
-      const { data } = await axios.get(`${BASE_URL}/templates`);
+      const { data } = await axios.get(${BASE_URL}/templates);
       setTemplates(data.templates || []);
     } catch (err) {
       console.error(err);
@@ -56,7 +56,7 @@ const Templates = () => {
   // Fetch categories
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get(`${BASE_URL}/categories`);
+      const { data } = await axios.get(${BASE_URL}/categories);
       setCategories(data.categories || data);
     } catch (err) {
       console.error(err);
@@ -126,8 +126,8 @@ const Templates = () => {
       if (form.file) fd.append("file", form.file);
 
       const url = editId
-        ? `${BASE_URL}/templates/${editId}`
-        : `${BASE_URL}/templates`;
+        ? ${BASE_URL}/templates/${editId}
+        : ${BASE_URL}/templates;
       const method = editId ? "put" : "post";
 
       await axios[method](url, fd, { headers: { "Content-Type": "multipart/form-data" } });
@@ -142,7 +142,7 @@ const Templates = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this template?")) return;
     try {
-      await axios.delete(`${BASE_URL}/templates/${id}`);
+      await axios.delete(${BASE_URL}/templates/${id});
       fetchTemplates();
     } catch (err) {
       console.error(err);
